@@ -15,9 +15,11 @@ def makeModel():
 def receiveMsg(req_message: str):
 
     pipe = makeModel()
-    result_df = pipe(req_message)
+    result_df = pipe(req_message, max_new_tokens = 200)
 
     ##TODO
     # result_df는 {"generated text", "{req_message} {result1}\{result2}\{result3}} 꼴로 이루어져있음. 이를 분리해야함
-    result_msg = ""
-    return result_msg
+    print(result_df)
+    return result_df
+
+receiveMsg("What is gimbab")

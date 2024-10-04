@@ -11,7 +11,3 @@ pipe = pipeline(
 )
 
 result = pipe("how can i fix car engine failure", max_new_tokens = 200)
-print(type(result))
-print(result)
-print(result[0])
-print(result[1])
