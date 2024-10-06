@@ -5,3 +5,6 @@ def loc_trans(location):
 	address = geolocoder.reverse(location)
 
 	return address
+
+address = loc_trans('36.5441, 128.5775')
+print(address)
