@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "Default template for PDM package"
 authors = [
     {name = "Jeonghoon2", email = "ukidd12@naver.com"},
+    {name = "hun0219", email = "gsw98000@gmail.com"},
 ]
 dependencies = [
     "torch>=2.4.1",
