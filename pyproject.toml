@@ -11,7 +11,7 @@ dependencies = [
     "dlib==19.24.2",
     "streamlit==1.29.0",
     "streamlit-webrtc>=0.47.9",
-    "opencv-python>=4.9",
+    "opencv-python>=4.10.0.84",
     "av>=12.3.0",
     "torch>=2.4.1",
     "torchvision>=0.19.1",
@@ -22,7 +22,7 @@ dependencies = [
     "jigutime>=0.2.1",
     "geopy>=2.4.1",
     "exifread>=3.0.0",
-    "pymysql>=1.1.1"
+    "pymysql>=1.1.1",
 ]
 requires-python = "==3.11.*"
 readme = "README.md"
