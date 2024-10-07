@@ -8,18 +8,19 @@ def select_pic():
     pic = random.choice(pics)
     return pic
 
-# 구글 Geocoding API를 사용해 주소로부터 위도, 경도 구하기
-def get_geocode_from_google(address):
+# 구글 Geocoding API를 사용해 위도, 경도로부터 주소 구하기 (역지오코딩)
+def get_address_from_google(latitude, longitude):
     # 구글 API 키 가져오기
     google_api_key = os.getenv("GOOGLE_API_KEY", "AIzaSyDl4Nte4s05r0q1CrPcUjyD-aZHudnGiOs")
 
-    # 구글 Geocoding API의 엔드포인트 URL
+    # 구글 Geocoding API의 역지오코딩 엔드포인트 URL
     url = "https://maps.googleapis.com/maps/api/geocode/json"
 
     # API 요청에 필요한 파라미터
     params = {
-        "address": address,
-        "key": google_api_key
+        "latlng": f"{latitude},{longitude}",
+        "key": google_api_key,
+        "language": "ko"
     }
 
     # API 요청 보내기
@@ -28,16 +29,14 @@ def get_geocode_from_google(address):
     if response.status_code == 200:
         data = response.json()
         if "results" in data and len(data["results"]) > 0:
-            location = data["results"][0]["geometry"]["location"]
-            lat = location["lat"]
-            lon = location["lng"]
-            return lat, lon
+            address = data["results"][0]["formatted_address"]
+            return address
         else:
-            print(f"주소를 찾을 수 없습니다: {address}")
-            return None, None
+            print(f"해당 위치의 주소를 찾을 수 없습니다: {latitude}, {longitude}")
+            return None
     else:
         print(f"API 요청 실패: {response.status_code}, {response.text}")
-        return None, None
+        return None
 
 # 라인 알림 전송
 def send_line_noti(message):
@@ -62,23 +61,23 @@ def run():
     for i in range(int(os.getenv("TEST_COUNT", 20))):
         pic = select_pic()
 
-        # 임시 랜덤 주소 목록
-        addresses = [
-            "서울특별시 강남구 테헤란로 427",
-            "경기도 성남시 분당구 판교역로 235",
-            "부산광역시 해운대구 해운대해변로 203"
+        # 임시 랜덤 좌표 목록 (위도, 경도)
+        locations = [
+            (37.5665, 126.9780),  # 서울특별시 위도, 경도
+            (37.3943, 127.1107),  # 경기도 성남시 위도, 경도
+            (35.1587, 129.1604)   # 부산광역시 위도, 경도
         ]
 
-        # 랜덤 주소 선택
-        address = random.choice(addresses)
-        print(f"선택된 주소: {address}")
+        # 랜덤 좌표 선택
+        latitude, longitude = random.choice(locations)
+        print(f"선택된 좌표: 위도 {latitude}, 경도 {longitude}")
 
-        # 주소로부터 위도와 경도 구하기
-        latitude, longitude = get_geocode_from_google(address)
-        if latitude and longitude:
-            print(f"위도: {latitude}, 경도: {longitude}")
+        # 위도, 경도로부터 주소 구하기
+        address = get_address_from_google(latitude, longitude)
+        if address:
+            print(f"구해진 주소: {address}")
 
-#            # 이미지와 위도, 경도를 가지고 HTTP 통신 (예: 서버로 전송)
+#            # 이미지와 주소를 가지고 HTTP 통신 (예: 서버로 전송)
 #            server_url = "https://example.com/upload"
 #            files = {"image": open(pic, "rb")}
 #            data = {
@@ -95,7 +94,7 @@ def run():
 #                print(f"서버 응답 실패: {response.status_code}")
 #
     print("==== Sample 데이터 생성 완료 ====")
-    
+
     # 라인 알림
     send_line_noti("완료")
 
