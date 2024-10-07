@@ -59,7 +59,7 @@ def transform(frame: av.VideoFrame):
                     }
 
                     # POST 요청 보내기
-                    response = requests.post('http://13.209.75.216:8000/uploadpic', files=files, data=data)
+                    response = requests.post('http://43.201.252.238:8090/uploadpic', files=files, data=data)
                     
                     # 응답 확인
                     if response.status_code == 200:
