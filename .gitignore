@@ -3,6 +3,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+img/
+
 # C extensions
 *.so
 pdm.lock
