@@ -3,15 +3,18 @@ from fastapi import FastAPI, UploadFile, Form, HTTPException
 from typing import Annotated
 from datetime import datetime
 from jigutime import jigu
-import pytz
-import os
 from geopy.geocoders import Nominatim
 from PIL import Image
+import pytz
+import os
 import exifread
+import pymysql.cursors
 
 app = FastAPI()
 
 gender_classifier = pipeline(model="NTQAI/pedestrian_gender_recognition")
+
+request_user = "t5"
 
 @app.get("/gender")
 def pic():
@@ -40,15 +43,33 @@ async def create_upload_file(file: UploadFile, label: Annotated[str, Form()], la
 
     results = gender_classifier(ffpath)
 
-    #geolocator = Nominatim(user_agent="my_geocoder_app")
-    #location = geolocator.geocode("Seoul")
+    con = pymysql.connect(host="172.17.0.1",
+                        port= 32768,
+                        user='pic',
+                        password='1234',
+                        db='picturedb',
+                        cursorclass=pymysql.cursors.DictCursor)
+
+    gender = results[0]["label"]
+    score_index = results[0]["score"]
+    score = round(score_index, 2)
+    
+    values = (file_name, ffpath, gender, score, request_time, request_user, latitude, longitude)
+    sql = "INSERT INTO picture (file_name, file_path, gender, score, request_time, request_user, latitude, longitude) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+
+    with con:
+        with con.cursor() as cursor:
+            cursor.execute(sql, values)
+            con.commit()
 
     return {
             "filename": file_name,
             "ontent_type": file.content_type,
             "file_path": ffpath,
-            "label": label,
+            "request_user": request_user,
             "result": results,
+            "성별": gender,
+            "예측점수": score,
             "위도": latitude,
             "경도": longitude,
             }
