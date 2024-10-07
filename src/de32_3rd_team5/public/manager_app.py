@@ -46,14 +46,13 @@ elif page == "[Sample] 위도 경도 및 사진 넣기":
         if latitude and longitude:
             try:
                 with conn.cursor() as cursor:
-                    # Insert query 실행
                     sql = "INSERT INTO samp_position (latitude, longitude) VALUES (%s, %s)"
                     cursor.execute(sql, (latitude, longitude))
-                    conn.commit()  # 변경사항 저장
+                    conn.commit()
                 st.success("데이터가 성공적으로 저장되었습니다!")
             except pymysql.MySQLError as e:
                 st.error(f"데이터베이스 오류 발생: {e}")
             finally:
-                conn.close()  # DB 연결 종료
+                conn.close()
         else:
             st.warning("위도와 경도를 입력해주세요.")
