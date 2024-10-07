@@ -6,12 +6,6 @@ authors = [
     {name = "Jeonghoon2", email = "ukidd12@naver.com"},
 ]
 dependencies = [
-    "torch>=2.4.1",
-    "torchvision>=0.19.1",
-    "torchaudio>=2.4.1",
-    "fastapi[standard]>=0.115.0",
-    "uvicorn[standard]>=0.31.0",
-    "transformers>=4.45.1",
     "face-recognition>=1.3.0",
     "cmake==3.25.2",
     "dlib==19.24.2",

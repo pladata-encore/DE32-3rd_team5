@@ -5,6 +5,7 @@ import numpy as np
 import av
 import datetime
 import face_recognition  # 얼굴 인식 라이브러리 추가
+import requests
 
 st.title("recognition")
 
@@ -19,7 +20,7 @@ def is_duplicate(face_encoding):
         return False
     
     # 얼굴 인코딩을 비교하여, 일정 임계값 이상으로 유사한 얼굴이 있는지 판별
-    matches = face_recognition.compare_faces(detected_faces_encodings, face_encoding, tolerance=0.6)
+    matches = face_recognition.compare_faces(detected_faces_encodings, face_encoding, tolerance=0.5)
     
     return any(matches)
 
@@ -41,17 +42,39 @@ def transform(frame: av.VideoFrame):
         if save_faces and not is_duplicate(face_encoding):
             face_img = img[top:bottom, left:right]
 
-            enlarged_face = cv2.resize(face_img, ((right - left) * 2, (bottom - top) * 2), interpolation=cv2.INTER_CUBIC)  # Enlarging the face image
+            enlarged_face = cv2.resize(face_img, ((right - left) * 2, (bottom - top) * 2))  # Enlarging the face image
             timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
             face_filename = f"face_{timestamp}.jpg"
             
             cv2.imwrite(face_filename, enlarged_face)
-            st.write(f"Face saved as: {face_filename}")
+            
+            # 파일을 FastAPI 서버로 업로드
+            try:
+                with open(face_filename, "rb") as f:
+                    files = {'file': f}
+                    data = {
+                        'label': 'male',  # 라벨 값 설정
+                        'latitude': 37.486438,  # 예시 위도
+                        'longitude': 127.020766  # 예시 경도
+                    }
+
+                    # POST 요청 보내기
+                    response = requests.post('http://13.209.75.216:8000/uploadpic', files=files, data=data)
+                    
+                    # 응답 확인
+                    if response.status_code == 200:
+                        st.write(f"Face saved as: {face_filename} and uploaded successfully.")
+                    else:
+                        st.write(f"Failed to upload {face_filename}: {response.status_code}, {response.text}")
+
+            except Exception as e:
+                st.write(f"Error during file upload: {e}")
+
             detected_faces_encodings.append(face_encoding)  # 새로운 얼굴 인코딩 저장
 
     return av.VideoFrame.from_ndarray(img, format="bgr24")
 
-save_faces = st.checkbox("Save Faces")
+save_faces = True
 
 webrtc_streamer(
     key="streamer",
