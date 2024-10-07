@@ -102,20 +102,20 @@ with DAG(
 	task_succ = BashOperator(
 		task_id='a.succ',
 		bash_command="""
-        curl -X POST -H 'Authorization: Bearer lFAUGd2l1MgZkHf54FJmZEXgyExhjOiqB2ueZlGQe52' -F 'message=task Airflow tasks complete.' https://notify-api.line.me/api/notify
+        curl -X POST -H 'Authorization: Bearer OtM5cXkXBgCJdkhAUvaJqAszuNWESrXPATwEXMXHRZ0' -F 'message=task Airflow tasks complete.' https://notify-api.line.me/api/notify
         """,
 		trigger_rule='one_success',
 	)
 	need_not_update = BashOperator(
 		task_id='a.noupdate',
 		bash_command="""
-        curl -X POST -H 'Authorization: Bearer lFAUGd2l1MgZkHf54FJmZEXgyExhjOiqB2ueZlGQe52' -F 'message=task Airflow tasks will close. Databases are not need update' https://notify-api.line.me/api/notify
+        curl -X POST -H 'Authorization: Bearer OtM5cXkXBgCJdkhAUvaJqAszuNWESrXPATwEXMXHRZ0' -F 'message=task Airflow tasks will close. Databases are not need update' https://notify-api.line.me/api/notify
 		""",
 	)
 	error_login = BashOperator(
 		task_id='e.login',
 		bash_command="""
-		curl -X POST -H 'Authorization: Bearer lFAUGd2l1MgZkHf54FJmZEXgyExhjOiqB2ueZlGQe52' -F 'message=task Airflow failed login process. Please check database server online' https://notify-api.line.me/api/notify
+		curl -X POST -H 'Authorization: Bearer OtM5cXkXBgCJdkhAUvaJqAszuNWESrXPATwEXMXHRZ0' -F 'message=task Airflow failed login process. Please check database server online' https://notify-api.line.me/api/notify
 		""",
 		trigger_rule='one_failed',
 	)
@@ -124,7 +124,7 @@ with DAG(
 		task_id='e.update',
 		bash_command=dedent(
 		"""
-		curl -X POST -H "Authorization: Bearer lFAUGd2l1MgZkHf54FJmZEXgyExhjOiqB2ueZlGQe52" -F "message=🚨 db_update 태스크에서 에러 발생! 🚨\n\n{{ti.xcom_pull(key='error_message')}}" https://notify-api.line.me/api/notify
+		curl -X POST -H "Authorization: Bearer OtM5cXkXBgCJdkhAUvaJqAszuNWESrXPATwEXMXHRZ0" -F "message=🚨 db_update 태스크에서 에러 발생! 🚨\n\n{{ti.xcom_pull(key='error_message')}}" https://notify-api.line.me/api/notify
 		"""
 		),
 		trigger_rule='one_success',
