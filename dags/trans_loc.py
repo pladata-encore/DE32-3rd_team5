@@ -19,40 +19,28 @@ def geom_trans(latitude: str, longitude: str):
 	# 결과값 : add - str
 	from de32_3rd_team5.geoutil import loc_trans
 
-
-def db_connect():
-	conn = mysql.connector.connect(
-		host='13.209.89.75',
-		port='32678',
-		user="pic",
-		password="1234",
-		database="picturedb",
-	)
-	if conn.get_conn():
-		return conn
-	else:
-		return 'login_fail'
-
 def db_check_func():
     # TODO
     # 업데이트 해야하는 DB 체크
-	conn = db_connect()
-	with conn.get_conn() as cur:
-		cur.execute("SELECT COUNT(*) FROM picture WHERE address = ''")  
+	conn = MySqlHook(mysql_conn_id='pic_db')
+	with conn.get_conn() as connection:
+		cur = connection.cursor()
+		cur.execute("SELECT COUNT(*) FROM picture WHERE address = ''")
 		# address 컬럼이 비어있는 행 개수 확인
 		empty_count = cur.fetchone()[0]
 	if empty_count == 0:
-		return 'need_not_update'  
+		return 'a.noupdate'
 		# 비어있는 행이 없으면 need_not_update 태스크로 이동
 	else:
-		return 'db_update'
+		return 'db.update'
 
 def db_update_func():
 	from de32_3rd_team5.geoutil import loc_trans
     # TODO
     # 업데이트 진행
-	conn = db_connect()
-	with conn.get_conn() as cur:
+	conn = MySqlHook(mysql_conn_id='pic_db')
+	with conn.get_conn() as connection:
+		cur = connection.cursor()
 		#TODO
 		# 1. address column이 비어있는 행의 latitude와 longitude를
 		# location = f"{latitude}, {longitude}"의 꼴로 location에 저장
@@ -111,13 +99,7 @@ with DAG(
 		bash_command="""
         curl -X POST -H 'Authorization: Bearer lFAUGd2l1MgZkHf54FJmZEXgyExhjOiqB2ueZlGQe52' -F 'message=task Airflow tasks complete.' https://notify-api.line.me/api/notify
         """,
-	)
-    login_fail = BashOperator(
-		task_id='e.login',
-		bash_command="""
-        curl -X POST -H 'Authorization: Bearer lFAUGd2l1MgZkHf54FJmZEXgyExhjOiqB2ueZlGQe52' -F 'message=task Airflow tasks fail. Login Error' https://notify-api.line.me/api/notify
-		""",
-		trigger_rule='one_failed',
+		trigger_rule='one_success',
 	)
     need_not_update = BashOperator(
 		task_id='a.noupdate',
@@ -125,16 +107,6 @@ with DAG(
         curl -X POST -H 'Authorization: Bearer lFAUGd2l1MgZkHf54FJmZEXgyExhjOiqB2ueZlGQe52' -F 'message=task Airflow tasks will close. Databases are not need update' https://notify-api.line.me/api/notify
 		""",
 	)
-    error = BashOperator(
-		task_id='e.error',
-		bash_command="""
-        curl -X POST -H 'Authorization: Bearer lFAUGd2l1MgZkHf54FJmZEXgyExhjOiqB2ueZlGQe52' -F 'message=task Airflow tasks fail. Update Error.' https://notify-api.line.me/api/notify
-		""",
-		trigger_rule='one_failed',
-	)
-
 
 start >> db_check >> db_update >> task_succ >> end
-login_fail >> end
 db_check >> need_not_update >> task_succ >> end
-db_update >> error >> end
