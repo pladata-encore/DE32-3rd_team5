@@ -1,0 +1,27 @@
+import random
+import os
+import requests
+
+
+def select_pic():
+    pics = ["./image_man.jpg", "./image_girl.jpg"]
+
+    pic = random.choice(pics)
+
+    return pic
+
+
+def run():
+    # 사진 선택
+    print("==== 등록 프로세스 시작 ====")
+
+    for _ in range(os.getenv("TEST_COUNT", 20)):
+        pic = select_pic()
+
+        # 임시 랜덤 주소 구하기
+
+        # 주소의 위도 경도 구하기
+
+        # 이미지와 위도, 경도를 가지고 http 통신
+
+    # 라인 연결 -> Sample 데이터 생성 끝
