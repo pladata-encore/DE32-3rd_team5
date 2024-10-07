@@ -15,6 +15,7 @@ dependencies = [
     "typing>=3.7.4.3",
     "tensorflow>=2.17.0",
     "geopy>=2.4.1",
+    "apache-airflow-providers-mysql>=5.7.1",
 ]
 requires-python = "==3.11.*"
 readme = "README.md"
