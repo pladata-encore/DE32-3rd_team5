@@ -4,7 +4,7 @@ WORKDIR /code
 
 COPY /src/de32_3rd_team5/main.py /code/
 
-RUN pip install --no-cache-dir --upgrade git+https://github.com/pladata-encore/DE32-3rd_team5.git@0.1/topic
+RUN pip install --no-cache-dir --upgrade git+https://github.com/pladata-encore/DE32-3rd_team5.git@main
 
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080", "--reload"]

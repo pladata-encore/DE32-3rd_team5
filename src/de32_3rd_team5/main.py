@@ -19,7 +19,7 @@ def pic():
     results = gender_classifier(image_path)
     return results
 
-@app.post("/uploadpic/")
+@app.post("/uploadpic")
 async def create_upload_file(file: UploadFile, label: Annotated[str, Form()], latitude: Annotated[float, Form()], longitude: Annotated[float, Form()]):
     # 파일 저장
     korea = datetime.now(pytz.timezone('Asia/Seoul'))
