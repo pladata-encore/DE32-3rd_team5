@@ -10,7 +10,7 @@ COPY haarcascade_frontalface_default.xml /code/
 #ENV STREAMLIT_SERVER_PORT=8000
 ENV STREAMLIT_SERVER_HEADLESS=true
 
-RUN apt-get update && apt-get install -y vim
+RUN apt-get update && apt-get install -y vim libgl1-mesa-glx libglib2.0-0
 
 RUN pip install --no-cache-dir opencv-python opencv-python-headless
 
