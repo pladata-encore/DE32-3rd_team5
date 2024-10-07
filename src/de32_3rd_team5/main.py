@@ -27,13 +27,13 @@ async def create_upload_file(file: UploadFile, label: Annotated[str, Form()], la
 
     img = await file.read()
     file_name = file.filename
-    file_ext = file.content_type.split('/')[-1]  #"image/png"
+    #file_ext = file.content_type.split('/')[-1]  #"image/png"
     # 디렉토리가 없으면 오류, 코드에서 확인 및 만들기 추가
     upload_dir = os.getenv('UPLOAD_DIR', '/home/young12/code/DE32-3rd_team5/img')
     if not os.path.exists(upload_dir):
         os.makedirs(upload_dir)
     import uuid
-    ffpath = os.path.join(upload_dir, f'{uuid.uuid4()}.{file_ext}')
+    ffpath = os.path.join(upload_dir, f'{uuid.uuid4()}.png')
 
     with open(ffpath, "wb") as f:
         f.write(img)
