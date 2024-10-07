@@ -1,6 +1,6 @@
 [project]
 name = "DE32-3rd_team5"
-version = "0.1.0"
+version = "0.2.0"
 description = "Default template for PDM package"
 authors = [
     {name = "Jeonghoon2", email = "ukidd12@naver.com"},
@@ -15,6 +15,7 @@ dependencies = [
     "jigutime>=0.2.1",
     "geopy>=2.4.1",
     "exifread>=3.0.0",
+    "pymysql>=1.1.1",
 ]
 requires-python = "==3.11.*"
 readme = "README.md"
