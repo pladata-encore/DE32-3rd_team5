@@ -59,8 +59,8 @@ def transform(frame: av.VideoFrame):
                     }
 
                     # POST 요청 보내기
-                    response = requests.post('http://43.201.252.238:8090/uploadpic', files=files, data=data)
-                    
+                    response = requests.post(f'http://{os.getenv("API_Request", "http://127.0.0.1")}:{os.getenv("MANAGER_ST_DB_PORT", "8090")}/uploadpic', files=files, data=data)
+                                    
                     # 응답 확인
                     if response.status_code == 200:
                         st.write(f"Face saved as: {face_filename} and uploaded successfully.")

@@ -43,11 +43,12 @@ async def create_upload_file(file: UploadFile, label: Annotated[str, Form()], la
 
     results = gender_classifier(ffpath)
 
-    con = pymysql.connect(host="172.17.0.1",
-                        port= 32768,
-                        user='pic',
-                        password='1234',
-                        db='picturedb',
+    con = pymysql.connect(host=os.getenv("MANAGER_ST_DB_host", "172.17.0.1"),
+                        port=os.getenv("MANAGER_ST_DB_PORT", 32768),
+                        user=os.getenv("MANAGER_ST_DB_USER", 'pic'),
+                        password=os.getenv("MANAGER_ST_DB_PASSWORD", '1234'),
+                        db=os.getenv("MANAGER_ST_DB", 'picturedb'),
+                        charset="utf8",
                         cursorclass=pymysql.cursors.DictCursor)
 
     gender = results[0]["label"]
