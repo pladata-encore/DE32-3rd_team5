@@ -11,7 +11,7 @@ from airflow.operators.python import (
 from airflow.providers.mysql.hooks.mysql import MySqlHook
 import pandas as pd
 import mysql.connector
-from de32_3rd_team5 import loc_trans
+from de32_3rd_team5 import reverse_geo
 
 
 def db_check_func():
@@ -51,11 +51,10 @@ def db_update_func(**context):
 
 			for row in rows:
 				latitude, longitude = row
-				location = f"{latitude}, {longitude}"
-				add = '"'+loc_trans(location)+'"'
+				add = reverse_geo(latitude, longitude)
 				cur.execute("UPDATE picture SET address = %s WHERE latitude = %s AND longitude = %s", (add, latitude, longitude))
+				connection.commit()
 
-		conn.close_conn()
 		return 'a.succ'
 
 	except Exception as e:
@@ -125,9 +124,7 @@ with DAG(
 		task_id='e.update',
 		bash_command=dedent(
 		"""
-		error_message="{{ ti.xcom_pull(task_ids='db.update', key='error_message') }}"
-
-		curl -X POST -H "Authorization: Bearer lFAUGd2l1MgZkHf54FJmZEXgyExhjOiqB2ueZlGQe52" -F "message=🚨 db_update 태스크에서 에러 발생! 🚨\n\n{{error_message}}" https://notify-api.line.me/api/notify
+		curl -X POST -H "Authorization: Bearer lFAUGd2l1MgZkHf54FJmZEXgyExhjOiqB2ueZlGQe52" -F "message=🚨 db_update 태스크에서 에러 발생! 🚨\n\n{{ti.xcom_pull(key='error_message')}}" https://notify-api.line.me/api/notify
 		"""
 		),
 		trigger_rule='one_success',
