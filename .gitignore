@@ -4,7 +4,7 @@ __pycache__/
 *$py.class
 
 img/
-
+*.jpg
 # C extensions
 *.so
 pdm.lock
