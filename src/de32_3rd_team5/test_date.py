@@ -39,12 +39,27 @@ def get_geocode_from_google(address):
         print(f"API 요청 실패: {response.status_code}, {response.text}")
         return None, None
 
-# 데이터 전송 및 테스트용 실행 함수
+# 라인 알림 전송
+def send_line_noti(message):
+    api_url = "https://notify-api.line.me/api/notify"
+    token = os.getenv('LINE_NOTI_TOKEN', 'NULL')
+    headers = {'Authorization': 'Bearer ' + token}
+
+    data = {
+        "message": message
+    }
+
+    resp = requests.post(api_url, headers=headers, data=data)
+    print(resp.text)
+    print("SEND LINE NOTI")
+
+
+# 데이터 전송 및 테스트용 실행
 def run():
     # 사진 선택
     print("==== 등록 프로세스 시작 ====")
 
-    for _ in range(int(os.getenv("TEST_COUNT", 20))):
+    for i in range(int(os.getenv("TEST_COUNT", 20))):
         pic = select_pic()
 
         # 임시 랜덤 주소 목록
@@ -80,6 +95,9 @@ def run():
 #                print(f"서버 응답 실패: {response.status_code}")
 #
     print("==== Sample 데이터 생성 완료 ====")
+    
+    # 라인 알림
+    send_line_noti("완료")
 
 # 테스트 실행
 if __name__ == "__main__":
