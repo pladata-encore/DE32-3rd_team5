@@ -18,5 +18,5 @@ def loc_trans(location):
 	result = f"{address_dict['address4']} {address_dict['address3']} {address_dict['address2']} {address_dict['address1']} {address_dict['address5']}" # 4 3 2 1 5
 	return result
 
-a = loc_trans('36.57442742, 128.1593441')
+a = loc_trans(' -19.039959,  -44.305202')
 print(a)
