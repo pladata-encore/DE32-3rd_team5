@@ -10,6 +10,7 @@ img/
 pdm.lock
 
 # Distribution / packaging
+.vscode
 .Python
 build/
 develop-eggs/
