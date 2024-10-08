@@ -16,6 +16,6 @@ RUN pip install --no-cache-dir opencv-python opencv-python-headless
 
 RUN pip install --no-cache-dir --upgrade git+https://github.com/pladata-encore/DE32-3rd_team5.git@main
 
-CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port 8080 --reload & streamlit run recognition.py --server.port 8090"]
+CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port 8070 --reload & streamlit run recognition.py --server.port 8090"]
 #CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080", "--reload"]
 #CMD ["streamlit", "run", "recognition.py"]
