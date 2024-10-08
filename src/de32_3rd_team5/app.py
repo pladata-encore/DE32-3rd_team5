@@ -1,4 +1,3 @@
-from typing import Union, Annotated
 from fastapi import FastAPI, File, UploadFile
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import FileResponse
@@ -6,7 +5,6 @@ from fastapi import Request
 from transformers import pipeline
 from PIL import Image
 
-import tensorflow as tf
 import os
 import json
 import random
