@@ -2,9 +2,13 @@ FROM python:3.11
 
 WORKDIR /code
 
+# FastAPI main 복제
 COPY /src/de32_3rd_team5/main.py /code/
+
+# 얼굴 인식 streamlit 복제
 COPY /src/de32_3rd_team5/public/recognition.py /code/
 COPY haarcascade_frontalface_default.xml /code/
+
 
 ENV STREAMLIT_SERVER_HEADLESS=true
 
