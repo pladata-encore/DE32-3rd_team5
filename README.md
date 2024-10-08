@@ -1,1 +1,21 @@
 # DE32-3rd_team5
+
+
+## ENV
+
+### Recognition Env
+
+```bash
+STREAMLIT_API_REQUEST_PIC=""
+STREAMLIT_API_REQUEST_PORT=""
+```
+
+### Manager Env
+
+```bash
+MANAGER_ST_DB_HOST=""
+MANAGER_ST_DB_PORT=""
+MANAGER_ST_DB_USER=""
+MANAGER_ST_DB_PASSWORD=""
+MANAGER_ST_DB=""
+```

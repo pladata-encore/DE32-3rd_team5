@@ -1,22 +1,31 @@
 [project]
 name = "DE32-3rd_team5"
-version = "0.1.0"
+version = "0.2.1"
 description = "Default template for PDM package"
 authors = [
     {name = "Jeonghoon2", email = "ukidd12@naver.com"},
+    {name = "hun0219", email = "gsw98000@gmail.com"},
 ]
 dependencies = [
+    "face-recognition>=1.3.0",
+    "cmake==3.25.2",
+    "dlib==19.24.2",
+    "streamlit==1.29.0",
+    "streamlit-webrtc>=0.47.9",
+    "opencv-python>=4.10.0.84",
+    "av>=12.3.0",
     "torch>=2.4.1",
     "torchvision>=0.19.1",
     "torchaudio>=2.4.1",
     "fastapi>=0.115.0",
     "uvicorn>=0.31.0",
     "transformers>=4.45.1",
-    "typing>=3.7.4.3",
-    "tensorflow>=2.17.0",
-    "geopy>=2.4.1",
-    "apache-airflow-providers-mysql>=5.7.1",
     "googlemaps>=4.10.0",
+    "requests>=2.32.3",
+    "jigutime>=0.2.1",
+    "geopy>=2.4.1",
+    "exifread>=3.0.0",
+    "pymysql>=1.1.1",
 ]
 requires-python = "==3.11.*"
 readme = "README.md"
