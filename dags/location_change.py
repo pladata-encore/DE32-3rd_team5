@@ -5,7 +5,8 @@ from airflow.operators.bash import BashOperator
 from airflow.operators.empty import EmptyOperator
 from airflow.operators.python import BranchPythonOperator
 from airflow.providers.mysql.hooks.mysql import MySqlHook
-from utils.geoutil import reverse_geo
+#from utils.geoutil import reverse_geo
+from de32_3rd_team5.geoutil import reverse_geo
 import pandas as pd
 import uuid
 import os
@@ -44,20 +45,25 @@ def db_update_func(**context):
     try:
         with conn.get_conn() as connection:
             cur = connection.cursor()
-			now = datetime.now()
+            now = datetime.now()
             one_hour_ago = now - timedelta(hours=1)
             cur.execute("SELECT latitude, longitude FROM picture WHERE address IS NULL")
             rows = cur.fetchall()
+            print("Task 1 Success")
 
             for latitude, longitude in rows:
-                address = reverse_geo(latitude, longitude) # 24.10.08 수정
-                cur.execute(
-                    "UPDATE picture SET address = %s WHERE latitude = %s AND longitude = %s",
-                    (adexecution_date = context['execution_date']
+                add = reverse_geo(latitude, longitude) # 24.10.08 수정
+                print(add, latitude, longitude)
+                cur.execute("UPDATE picture SET address = %s WHERE latitude = %s AND longitude = %s", (add, latitude, longitude))
+                connection.commit()
+            
+            print("Task 2 Success")
+            execution_date = context['execution_date']
             year = execution_date.year
             month = execution_date.month
             day = execution_date.day
             hour = execution_date.hour
+			
 
             # 저장 경로를 생성합니다.
             save_path = f"data/{year}/{month}/{day}/{hour}"
@@ -65,40 +71,23 @@ def db_update_func(**context):
 
             # uuid를 생성합니다.
             unique_filename = str(uuid.uuid4())
-
-            # DataFrame을 parquet 파일로 저장합니다.
-            df.to_parquet(f"{save_path}/{unique_filename}.parquet")dress, latitude, longitude),
-                )
-
-			updated_query = f"""
+            updated_query = f"""
                 SELECT *
                 FROM picture
                 WHERE address IS NOT NULL
-                AND created_at >= '{one_hour_ago.strftime('%Y-%m-%d %H:%M:%S')}'
+                AND request_time >= '{one_hour_ago.strftime('%Y-%m-%d %H:%M:%S')}'
             """
             cur.execute(updated_query)
             updated_rows = cur.fetchall()
+            print("Task 3 Success")
 
             # Pandas DataFrame으로 변환
             columns = [desc[0] for desc in cur.description]  # 컬럼 이름 가져오기
             df = pd.DataFrame(updated_rows, columns=columns)
 			
-			execution_date = context['execution_date']
-            year = execution_date.year
-            month = execution_date.month
-            day = execution_date.day
-            hour = execution_date.hour
-
-            # 저장 경로를 생성합니다.
-            save_path = f"data/{year}/{month}/{day}/{hour}"
-            os.makedirs(save_path, exist_ok=True)  # 디렉토리가 없으면 생성합니다.
-
-            # uuid를 생성합니다.
-            unique_filename = str(uuid.uuid4())
-
             # DataFrame을 parquet 파일로 저장합니다.
             df.to_parquet(f"{save_path}/{unique_filename}.parquet")
-
+            print("Task 4 Success")
         connection.commit()
 
         return "a.succ"
@@ -125,7 +114,7 @@ def send_line_notify(message):
 
 # DAG 정의
 with DAG(
-    "Transfer_Location",
+    "Transfer_Location_v2",
     default_args={
         "depends_on_past": False,
         "retries": 0,
