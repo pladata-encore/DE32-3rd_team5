@@ -6,23 +6,30 @@ import av
 import datetime
 import face_recognition  # 얼굴 인식 라이브러리 추가
 import requests
+import os
 
 st.title("recognition")
 
-face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+face_cascade = cv2.CascadeClassifier(
+    cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
+)
 
 save_faces = False
 detected_faces_encodings = []  # 저장된 얼굴의 인코딩 목록
+
 
 def is_duplicate(face_encoding):
     """Check if the current face encoding is already detected and saved."""
     if len(detected_faces_encodings) == 0:
         return False
-    
+
     # 얼굴 인코딩을 비교하여, 일정 임계값 이상으로 유사한 얼굴이 있는지 판별
-    matches = face_recognition.compare_faces(detected_faces_encodings, face_encoding, tolerance=0.5)
-    
+    matches = face_recognition.compare_faces(
+        detected_faces_encodings, face_encoding, tolerance=0.5
+    )
+
     return any(matches)
+
 
 def transform(frame: av.VideoFrame):
     global save_faces
@@ -34,38 +41,51 @@ def transform(frame: av.VideoFrame):
     face_locations = face_recognition.face_locations(rgb_img)
     face_encodings = face_recognition.face_encodings(rgb_img, face_locations)
 
-    for (face_encoding, face_location) in zip(face_encodings, face_locations):
+    for face_encoding, face_location in zip(face_encodings, face_locations):
         top, right, bottom, left = face_location
         cv2.rectangle(img, (left, top), (right, bottom), (255, 0, 0), 2)
-
 
         if save_faces and not is_duplicate(face_encoding):
             face_img = img[top:bottom, left:right]
 
-            enlarged_face = cv2.resize(face_img, ((right - left) * 2, (bottom - top) * 2))  # Enlarging the face image
+            enlarged_face = cv2.resize(
+                face_img, ((right - left) * 2, (bottom - top) * 2)
+            )  # Enlarging the face image
             timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
             face_filename = f"face_{timestamp}.jpg"
-            
+
             cv2.imwrite(face_filename, enlarged_face)
-            
+
             # 파일을 FastAPI 서버로 업로드
             try:
                 with open(face_filename, "rb") as f:
-                    files = {'file': f}
+                    files = {"file": f}
                     data = {
-                        'label': 'male',  # 라벨 값 설정
-                        'latitude': 37.486438,  # 예시 위도
-                        'longitude': 127.020766  # 예시 경도
+                        "label": "male",  # 라벨 값 설정
+                        "latitude": 37.486438,  # 예시 위도
+                        "longitude": 127.020766,  # 예시 경도
                     }
+                    url = f'http://{os.getenv("STREAMLIT_API_REQUEST_PIC", "43.201.252.238")}:{os.getenv("STREAMLIT_API_REQUEST_PORT", "8070")}/uploadpic'
+                    print(f"Request URL: {url}")
 
                     # POST 요청 보내기
-                    response = requests.post(f'http://{os.getenv("API_Request", "http://127.0.0.1")}:{os.getenv("MANAGER_ST_DB_PORT", "8090")}/uploadpic', files=files, data=data)
-                                    
+                    response = requests.post(
+                        url,
+                        files=files,
+                        data=data,
+                    )
+
                     # 응답 확인
                     if response.status_code == 200:
-                        st.write(f"Face saved as: {face_filename} and uploaded successfully.")
+                        st.write(
+                            f"Face saved as: {face_filename} and uploaded successfully."
+                        )
+                        print("요청 완료")
                     else:
-                        st.write(f"Failed to upload {face_filename}: {response.status_code}, {response.text}")
+                        st.write(
+                            f"Failed to upload {face_filename}: {response.status_code}, {response.text}"
+                        )
+                        print("요청 실패")
 
             except Exception as e:
                 st.write(f"Error during file upload: {e}")
@@ -73,6 +93,7 @@ def transform(frame: av.VideoFrame):
             detected_faces_encodings.append(face_encoding)  # 새로운 얼굴 인코딩 저장
 
     return av.VideoFrame.from_ndarray(img, format="bgr24")
+
 
 save_faces = True
 
@@ -85,9 +106,9 @@ webrtc_streamer(
     ),
     media_stream_constraints={
         "video": {
-            "width": {"ideal": 1920}, 
+            "width": {"ideal": 1920},
             "height": {"ideal": 1080},
-            "facingMode": "user" 
+            "facingMode": "user",
         }
-    }
+    },
 )
