@@ -17,9 +17,10 @@ dependencies = [
     "torch>=2.4.1",
     "torchvision>=0.19.1",
     "torchaudio>=2.4.1",
-    "fastapi[standard]>=0.115.0",
-    "uvicorn[standard]>=0.31.0",
+    "fastapi>=0.115.0",
+    "uvicorn>=0.31.0",
     "transformers>=4.45.1",
+    "googlemaps>=4.10.0",
     "requests>=2.32.3",
     "jigutime>=0.2.1",
     "geopy>=2.4.1",
@@ -33,3 +34,8 @@ license = {text = "MIT"}
 
 [tool.pdm]
 distribution = false
+
+[tool.pdm.dev-dependencies]
+test = [
+    "pytest>=8.3.3",
+]
