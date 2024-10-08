@@ -8,4 +8,3 @@ def reverse_geo(latitude: str, longitude: str):
         return result[0]['formatted_address']
     else:
         return None
-print(reverse_geo(36.571, 127.445))
