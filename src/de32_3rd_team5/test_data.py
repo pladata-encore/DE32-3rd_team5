@@ -98,9 +98,9 @@ def run():
         print(f"선택된 좌표: 위도 {latitude}, 경도 {longitude}")
 
         # 위도, 경도로부터 주소 구하기
-        address = get_address_from_google(latitude, longitude)
-        if address:
-            print(f"구해진 주소: {address}")
+        #address = get_address_from_google(latitude, longitude)
+        #if address:
+        #    print(f"구해진 주소: {address}")
 
     print("==== Sample 데이터 생성 완료 ====")
 
