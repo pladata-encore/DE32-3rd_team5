@@ -7,7 +7,7 @@ img/
 *.jpg
 # C extensions
 *.so
-pdm.lock
+
 .DS_Store
 # Distribution / packaging
 .vscode
