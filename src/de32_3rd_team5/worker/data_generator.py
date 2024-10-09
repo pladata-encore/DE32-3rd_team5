@@ -111,7 +111,6 @@ def upload_file_to_fastapi_server(label="male"):
             }
 
             # POST 요청 보내기
-            # response = requests.post(f'http://{os.getenv("API_Request", "http://127.0.0.1")}:{os.getenv("MANAGER_ST_DB_PORT", "8090")}/uploadpic', files=files, data=data)
             response = requests.post(api_url, files=files, data=data)
 
             # 응답 확인
@@ -128,22 +127,26 @@ def upload_file_to_fastapi_server(label="male"):
 
 # 데이터 전송 및 테스트용 실행
 def run():
+    import datetime
+
+    send_line_noti(
+        f"""[TEAM 5]
+샘플 데이터 생성 Woker 시작
+실행 시각 : {datetime.datetime.now}
+"""
+    )
+
     print("==== 등록 프로세스 시작 ====")
 
     for i in range(int(os.getenv("TEST_COUNT", 20))):
         upload_file_to_fastapi_server()
 
-        # 위도, 경도로부터 주소 구하기
-        # address = get_address_from_google(latitude, longitude)
-        # if address:
-        #    print(f"구해진 주소: {address}")
-
     print("==== Sample 데이터 생성 완료 ====")
 
     # 라인 알림
-    send_line_noti("위도,경도로 주소 변환 완료")
-
-
-# 테스트 실행
-if __name__ == "__main__":
-    run()
+    send_line_noti(
+        f"""[TEAM 5]
+샘플 데이터 생성 완료
+종료 시간 : {datetime.datetime.now()}
+"""
+    )
