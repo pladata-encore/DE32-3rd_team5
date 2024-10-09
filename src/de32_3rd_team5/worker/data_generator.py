@@ -18,7 +18,12 @@ def get_connection():
 
 # 이미지 선택 함수
 def select_pic():
-    pics = ["./image_man.jpg", "./image_girl.jpg"]
+    py_path = __file__
+    py_dir_path = os.path.dirname(py_path)
+    man_image = os.path.join(py_dir_path, "image_man.jpg")
+    girl_image = os.path.join(py_dir_path, "image_girl.jpg")
+
+    pics = [man_image, girl_image]
     pic = random.choice(pics)
     return pic
 
@@ -132,7 +137,7 @@ def run():
     send_line_noti(
         f"""[TEAM 5]
 샘플 데이터 생성 Woker 시작
-실행 시각 : {datetime.datetime.now}
+실행 시각 : {datetime.datetime.now()}
 """
     )
 
