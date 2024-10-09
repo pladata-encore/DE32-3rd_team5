@@ -30,26 +30,41 @@ async def create_upload_file(
     latitude: Annotated[float, Form()],
     longitude: Annotated[float, Form()],
 ):
-    # 파일 저장
+    import uuid
+
+    # 요청 시간
     korea = datetime.now(pytz.timezone("Asia/Seoul"))
     request_time = korea.strftime("%Y-%m-%d %H:%M:%S")
 
+    # 이미지 읽기
     img = await file.read()
+
+    # 파이 이름 구하기
     file_name = file.filename
-    # file_ext = file.content_type.split('/')[-1]  #"image/png"
-    # 디렉토리가 없으면 오류, 코드에서 확인 및 만들기 추가
+
+    # 업로드 위치
     upload_dir = os.getenv("UPLOAD_DIR", "/home/young12/code/DE32-3rd_team5/img")
+
+    # 업로드 해야할 Dir이 없을 경우 생성
     if not os.path.exists(upload_dir):
         os.makedirs(upload_dir)
-    import uuid
 
+    # 업로드 경로 생성
     ffpath = os.path.join(upload_dir, f"{uuid.uuid4()}.png")
 
+    # 파일 쓰기
     with open(ffpath, "wb") as f:
         f.write(img)
 
+    # 성별 예측
     results = gender_classifier(ffpath)
 
+    # 예측 값 추출
+    gender = results[0]["label"]
+    score_index = results[0]["score"]
+    score = round(score_index, 2)
+
+    # DB 커넥션 생성
     con = pymysql.connect(
         host=os.getenv("MANAGER_ST_DB_HOST", "172.17.0.1"),
         port=os.getenv("MANAGER_ST_DB_PORT", 32768),
@@ -59,10 +74,6 @@ async def create_upload_file(
         charset="utf8",
         cursorclass=pymysql.cursors.DictCursor,
     )
-
-    gender = results[0]["label"]
-    score_index = results[0]["score"]
-    score = round(score_index, 2)
 
     values = (
         file_name,
