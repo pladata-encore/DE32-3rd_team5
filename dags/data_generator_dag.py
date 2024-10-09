@@ -32,8 +32,6 @@ with DAG(
     def data_generator_func():
         run()
 
-    #############################################################
-
     start = EmptyOperator(task_id="start")
     end = EmptyOperator(task_id="end", trigger_rule="all_done")
 
