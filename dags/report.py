@@ -3,11 +3,7 @@ from textwrap import dedent
 from airflow import DAG
 from airflow.operators.bash import BashOperator
 from airflow.operators.empty import EmptyOperator
-from airflow.operators.python import (
-    PythonOperator,
-    PythonVirtualenvOperator,
-    BranchPythonOperator,
-)
+from airflow.operators.python import BranchPythonOperator
 from airflow.providers.mysql.hooks.mysql import MySqlHook
 import pandas as pd
 from de32_3rd_team5 import reverse_geo
