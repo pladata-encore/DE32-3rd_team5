@@ -14,7 +14,7 @@ with DAG(
     },
     max_active_runs=1,
     max_active_tasks=3,
-    description="Transform location to address using API",
+    description="Data Tally",
     schedule="*/10 * * * *",
     start_date=datetime(2024, 10, 5),
     catchup=True,
@@ -22,7 +22,7 @@ with DAG(
 ) as dag:
 
     start = EmptyOperator(task_id="start")
-    work = BashOperator(bash_command="""""")
+    worker = BashOperator(bash_command="""""")
     end = EmptyOperator(task_id="end", trigger_rule="all_done")
 
-    start >> submit >> end
+    start >> worker >> end
