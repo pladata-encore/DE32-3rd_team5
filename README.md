@@ -27,3 +27,6 @@ Streamlit 접속
 
 ## PPT
 [PPT](https://docs.google.com/presentation/d/1SGar9_-OyyddAMztfljl8G9gBTSYg6XWr_eULdLLcKA/edit#slide=id.g309f0248bd2_0_161)
+
+## 참조 모델
+https://huggingface.co/NTQAI/pedestrian_gender_recognition
