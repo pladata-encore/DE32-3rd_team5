@@ -3,13 +3,8 @@ from textwrap import dedent
 from airflow import DAG
 from airflow.operators.bash import BashOperator
 from airflow.operators.empty import EmptyOperator
-from airflow.operators.python import (
-    PythonOperator,
-    PythonVirtualenvOperator,
-    BranchPythonOperator,
-)
-from airflow.providers.mysql.hooks.mysql import MySqlHook
-from de32_3rd_team5.data_generator import run
+from airflow.operators.python import PythonOperator
+from de32_3rd_team5.worker.data_generator import run
 
 
 with DAG(
@@ -31,8 +26,6 @@ with DAG(
 
     def data_generator_func():
         run()
-
-    #############################################################
 
     start = EmptyOperator(task_id="start")
     end = EmptyOperator(task_id="end", trigger_rule="all_done")
